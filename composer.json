@@ -1,0 +1,14 @@
+{
+    "name": "Fr3ddy/Laratoor",
+    "description": "Laravel package for Toornament API",
+    "authors": [
+        {
+            "name": "Frederik Frey",
+            "email": "frey@binaerix.de"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "guzzlehttp/guzzle": "^6.2@dev"
+    }
+}
