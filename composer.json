@@ -2,7 +2,7 @@
     "name": "fr3ddy/laratoor",
     "description": "Laravel package for Toornament API",
     "version": "0.0.1-alpha",
-    "license": "Apache",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Frederik Frey",
