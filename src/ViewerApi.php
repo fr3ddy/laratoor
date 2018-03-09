@@ -77,4 +77,118 @@ class ViewerApi extends ToornamentApi{
     public function getTournamentCustomFields($id,$filter){
         return $this->get('tournaments/'.$id.'/custom-fields');
     }
+
+    public function getAllParticipantsOfTournament($tournament_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->getAll('tournaments/'.$tournament_id.'/participants'.$query,'participants',50);
+    }
+
+    public function getParticipantsOfTournament($tournament_id,$filter,$from,$to){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/participants'.$query,'participants',$from,$to);
+    }
+
+    public function getParticipantOfTournament($tournament_id,$participant_id){
+        return $this->get('tournaments/'.$tournament_id.'/participants/'.$participant_id);
+    }
+
+    public function getStagesOfTournament($tournament_id){
+        return $this->get('tournaments/'.$tournament_id.'/stages');
+    }
+
+    public function getStageOfTournament($tournament_id,$stage_id){
+        return $this->get('tournaments/'.$tournament_id.'/stages/'.$stage_id);
+    }
+
+    public function getGroupsOfTournament($tournament_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/groups'.$query);
+    }
+
+    public function getGroupOfTournament($tournament_id,$group_id){
+        return $this->get('tournaments/'.$tournament_id.'/groups/'.$group_id);
+    }
+
+    public function getRoundsOfTournament($tournament_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/rounds'.$query);
+    }
+
+    public function getRoundOfTournament($tournament_id,$round_id){
+        return $this->get('tournaments/'.$tournament_id.'/groups/'.$group_id);
+    }
+
+    public function getAllMatchesOfTournament($tournament_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->getAll('tournaments/'.$tournament_id.'/matches'.$query,'matches',128);
+    }
+
+    public function getMatchesOfTournament($tournament_id,$filter,$from,$to){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/matches'.$query,'matches',$from,$to);
+    }
+
+    public function getMatchOfTournament($tournament_id,$match_id){
+        return $this->get('tournaments/'.$tournament_id.'/matches'.$match_id);
+    }
+
+    public function getAllMatchesByDiscipline($discipline_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->getAll('disciplines/'.$discipline_id.'/matches'.$query,128);
+    }
+
+    public function getMatchesByDiscipline($discipline_id,$filter,$from,$to){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('disciplines/'.$discipline_id.'/matches'.$query,'matches',$from,$to);
+    }
+
+    public function getAllBracketsOfStageInTournament($tournament_id,$stage_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->getAll('tournaments/'.$tournament_id.'/stages/'.$stage_id.'/bracket-nodes'.$query,'nodes',128);
+    }
+
+    public function getBracketsOfStageInTournament($tournament_id,$stage_id,$filter,$from,$to){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/stages/'.$stage_id.'/bracket-nodes'.$query,'nodes',$from,$to);
+    }
+
+    public function getAllRankingsOfStageInTournament($tournament_id,$stage_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->getAll('tournaments/'.$tournament_id.'/stages/'.$stage_id.'/ranking-items'.$query,'items',128);
+    }
+
+    public function getRankingsOfStageInTournament($tournament_id,$stage_id,$filter,$from,$to){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/stages/'.$stage_id.'/ranking-items'.$query,'items',$from,$to);
+    }
+
+    public function getAllStreamsOfTournament($tournament_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->getAll('tournaments/'.$tournament_id.'/streams'.$query,'streams',50);
+    }
+
+    public function getStreamsOfTournament($tournament_id,$filter,$from,$to){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/streams'.$query,'streams',$from,$to);
+    }
+
+    public function getAllVideosOfTournament($tournament_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->getAll('tournaments/'.$tournament_id.'/videos'.$query,'videos',50);
+    }
+
+    public function getVideosOfTournament($tournament_id,$filter,$from,$to){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/videos'.$query,'videos',$from,$to);
+    }
+
+    public function getAllVideosOfMatchInTournament($tournament_id,$match_id,$filter){
+        $query = $this->getQueryByFilter($filter);
+        return $this->getAll('tournaments/'.$tournament_id.'/matches/'.$match_id.'/videos'.$query,'videos',50);
+    }
+
+    public function getVideosOfMatchInTournament($tournament_id,$match_id,$filter,$from,$to){
+        $query = $this->getQueryByFilter($filter);
+        return $this->get('tournaments/'.$tournament_id.'/matches/'.$match_id.'/videos'.$query,'videos',$from,$to);
+    }
 }
