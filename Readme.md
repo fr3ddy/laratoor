@@ -1,6 +1,6 @@
 # Laratoor
 
-This package will support you in any development related to the official [Toornament API](https://developer.toornament.com).
+This package will support you in any development related to the official [Toornament API](https://developer.toornament.com). After realeasing V2 of the API, many things changed. You can find a full documentation on the Toornament Page.
 
 ## Installation
 TBD
