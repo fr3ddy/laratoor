@@ -3,7 +3,23 @@
 This package will support you in any development related to the official [Toornament API](https://developer.toornament.com). After realeasing V2 of the API, many things changed. You can find a full documentation on the Toornament Page.
 
 ## Installation
-TBD
+Installation can be done easly with composer
+
+```php
+    composer require fr3ddy/laratoor
+```
+
+Add Fr3ddy\Laratoor\LaratoorServiceProvider::class to your providers array in your config/app.php
+
+```php
+    Fr3ddy\Laratoor\LaratoorServiceProvider::class
+```
+
+Add your API Token to your application from [Toornament](https://developer.toornament.com/applications/).
+
+```php
+    TOORNAMENT_SECRET=
+```
 
 ## Usage
 Since version two, Toornament does have four different layers in their API.
