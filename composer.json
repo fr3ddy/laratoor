@@ -1,5 +1,5 @@
 {
-    "name": "Fr3ddy/Laratoor",
+    "name": "fr3ddy/laratoor",
     "description": "Laravel package for Toornament API",
     "authors": [
         {
@@ -9,6 +9,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "guzzlehttp/guzzle": "^6.2@dev"
+        "php" : "^5.5",
+        "guzzlehttp/guzzle": "^6.2"
     }
 }
