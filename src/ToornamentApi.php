@@ -128,4 +128,34 @@ class ToornamentApi{
             return '';
         }
     }
+
+    /**
+     * @param string $classname Name of the Class to create
+     * @param array $data Data Array
+     * @return any Class of Type specified
+     */
+    public function dataToModel($classname,$data){
+        $classname = "\Fr3ddy\Laratoor\Model\\".$classname;
+        if($this->isSuccessStatus($data["status"])){
+            return new $classname($data["data"]);
+        }
+        return false;
+    }
+
+    /**
+     * @param string $classname Name of the Class to create
+     * @param array $data Data Array
+     * @return array Collection of Classes of Type specified
+     */
+    public function dataToModels($classname,$data){
+        $classname = "\Fr3ddy\Laratoor\Model\\".$classname;
+        if($this->isSuccessStatus($data["status"])){
+            $return = collect();
+            foreach($data["data"] as $classdata){
+                $return->push(new $classname($classdata));
+            }
+            return $return;
+        }
+        return false;
+    }
 }

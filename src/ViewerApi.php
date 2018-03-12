@@ -50,10 +50,12 @@ class ViewerApi extends ToornamentApi{
     }
 
     /**
-     * @return array
+     * @throws 
+     * @return array $disciplines Array with Disciplines
      */
     public function getAllDisciplines(){
-        return $this->getAll('disciplines','disciplines',50);
+        $request = $this->getAll('disciplines','disciplines',50);
+        return $this->dataToModels('Discipline',$request);
     }
 
     /**
@@ -62,15 +64,17 @@ class ViewerApi extends ToornamentApi{
      * @return array
      */
     public function getDisciplines($from = 0,$to = 49){
-        return $this->get('disciplines','disciplines',$from,$to);
+        $request = $this->get('disciplines','disciplines',$from,$to);
+        return $this->dataToModels('Discipline',$request);
     }
 
     /**
      * @param int $id Discipline ID
-     * @return array
+     * @return Discipline
      */
     public function getDiscipline($id){
-        return $this->get('disciplines/'.$id);
+        $request = $this->get('disciplines/'.$id);
+        return $this->dataToModel('Discipline',$request);
     }
 
     /**
