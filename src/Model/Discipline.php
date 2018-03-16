@@ -2,6 +2,8 @@
 
 namespace Fr3ddy\Laratoor\Model;
 
+use Fr3ddy\Laratoor\ViewerApi;
+
 class Discipline extends \Fr3ddy\Laratoor\Model{
 
     /**
@@ -39,6 +41,12 @@ class Discipline extends \Fr3ddy\Laratoor\Model{
      */
     public $max_team_size;
 
+    /**
+     * __construct
+     *
+     * @param array $data
+     * @return void
+     */
     public function __construct($data){
         parent::__construct();
         foreach($data as $key => $value){
@@ -51,10 +59,33 @@ class Discipline extends \Fr3ddy\Laratoor\Model{
         }
     }
 
+    /**
+     * loadDetails
+     *
+     * @return void
+     */
     public function loadDetails(){
         $discipline = $this->viewerApi->getDiscipline($this->id);
         $this->platforms_available = $discipline->platforms_available;
         $this->min_team_size = $discipline->min_team_size;
         $this->max_team_size = $discipline->max_team_size;
+    }
+
+    /**
+     * @param string|null $filter Filter
+     */
+    public function getAllMatches($filter = null){
+        $viewer = new ViewerApi();
+        return $viewer->getAllMatchesByDiscipline($this->id,$filter);
+    }
+
+    /**
+     * @param string|null $filter Filter
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
+     */
+    public function getMatches($filter = null,$from = 0,$to = 49){
+        $viewer = new ViewerApi();
+        return $viewer->getMatchesByDiscipline($this->id,$filter,$from,$to);
     }
 }

@@ -59,8 +59,8 @@ class ViewerApi extends ToornamentApi{
     }
 
     /**
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
      * @return array
      */
     public function getDisciplines($from = 0,$to = 49){
@@ -70,7 +70,7 @@ class ViewerApi extends ToornamentApi{
 
     /**
      * @param int $id Discipline ID
-     * @return Discipline
+     * @return Fr3ddy\Laratoor\Model\Discipline Discipline
      */
     public function getDiscipline($id){
         $request = $this->get('disciplines/'.$id);
@@ -78,22 +78,25 @@ class ViewerApi extends ToornamentApi{
     }
 
     /**
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
     public function getAllFeaturedTournaments($filter = null){
         $query = $this->getQueryByFilter($filter);
-        return $this->getAll('tournaments/featured'.$query,'tournaments',50);
+        $request = $this->getAll('tournaments/featured'.$query,'tournaments',50);
+        return $this->dataToModels('Tournament',$request);
     }
 
     /**
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param array|null $filter Filter as an array
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
      * @return array
      */
-    public function getFeaturedTournaments($filter,$from,$to){
-        return $this->getAll('tournaments/featured','tournaments',$from,$to);
+    public function getFeaturedTournaments($filter = null,$from = 0,$to = 49){
+        $query = $this->getQueryByFilter($filter);
+        $request = $this->getAll('tournaments/featured'.$query,'tournaments',$from,$to);
+        return $this->dataToModels('Tournament',$request);
     }
 
     /**
@@ -101,38 +104,42 @@ class ViewerApi extends ToornamentApi{
      * @return array
      */
     public function getTournament($tournament_id){
-        return $this->get('tournaments/'.$tournament_id);
+        $request = $this->get('tournaments/'.$tournament_id);
+        return $this->dataToModel('Tournament',$request);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getTournamentCustomFields($tournament_id,$filter){
-        return $this->get('tournaments/'.$tournament_id.'/custom-fields');
-    }
-
-    /**
-     * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
-     * @return array
-     */
-    public function getAllParticipantsOfTournament($tournament_id,$filter){
+    public function getTournamentCustomFields($tournament_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
-        return $this->getAll('tournaments/'.$tournament_id.'/participants'.$query,'participants',50);
+        return $this->get('tournaments/'.$tournament_id.'/custom-fields'.$query);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getParticipantsOfTournament($tournament_id,$filter,$from,$to){
+    public function getAllParticipantsOfTournament($tournament_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
-        return $this->get('tournaments/'.$tournament_id.'/participants'.$query,'participants',$from,$to);
+        $request = $this->getAll('tournaments/'.$tournament_id.'/participants'.$query,'participants',50);
+        return $this->dataToModels('Participant',$request,$tournament_id);
+    }
+
+    /**
+     * @param int $tournament_id Tournament Id
+     * @param array|null $filter Filter as an array
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
+     * @return array
+     */
+    public function getParticipantsOfTournament($tournament_id,$filter = null,$from = 0,$to = 49){
+        $query = $this->getQueryByFilter($filter);
+        $request = $this->get('tournaments/'.$tournament_id.'/participants'.$query,'participants',$from,$to);
+        return $this->dataToModels('Participant',$request,$tournament_id);
     }
 
     /**
@@ -141,7 +148,8 @@ class ViewerApi extends ToornamentApi{
      * @return array
      */
     public function getParticipantOfTournament($tournament_id,$participant_id){
-        return $this->get('tournaments/'.$tournament_id.'/participants/'.$participant_id);
+        $request = $this->get('tournaments/'.$tournament_id.'/participants/'.$participant_id);
+        return $this->dataToModel('Participant',$request,$tournament_id);
     }
 
     /**
@@ -149,7 +157,8 @@ class ViewerApi extends ToornamentApi{
      * @return array
      */
     public function getStagesOfTournament($tournament_id){
-        return $this->get('tournaments/'.$tournament_id.'/stages');
+        $request = $this->get('tournaments/'.$tournament_id.'/stages');
+        return $this->dataToModels('Stage',$request,$tournament_id);
     }
 
     /**
@@ -158,36 +167,74 @@ class ViewerApi extends ToornamentApi{
      * @return array
      */
     public function getStageOfTournament($tournament_id,$stage_id){
-        return $this->get('tournaments/'.$tournament_id.'/stages/'.$stage_id);
+        $request = $this->get('tournaments/'.$tournament_id.'/stages/'.$stage_id);
+        return $this->dataToModel('Stage',$request,$tournament_id);
     }
 
     /**
-     * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
+     * getAllGroupsOfTournament
+     *
+     * @param int $tournament_id
+     * @param array|null $filter
+     * @return void
+     */
+    public function getAllGroupsOfTournament($tournament_id,$filter = null){
+        $query = $this->getQueryByFilter($filter);
+        $request = $this->getAll('tournaments/'.$tournament_id.'/groups'.$query,"groups",50);
+        return $this->dataToModels('Group',$request,$tournament_id);
+    }
+
+    /**
+     * getGroupsOfTournament
+     *
+     * @param int $tournament_id
+     * @param array|null $filter
+     * @param int $from
+     * @param int $to
      * @return array
      */
-    public function getGroupsOfTournament($tournament_id,$filter){
+    public function getGroupsOfTournament($tournament_id,$filter = null,$from = 0 , $to = 49){
         $query = $this->getQueryByFilter($filter);
-        return $this->get('tournaments/'.$tournament_id.'/groups'.$query);
+        $request = $this->get('tournaments/'.$tournament_id.'/groups'.$query,"groups",$from,$to);
+        return $this->dataToModels('Group',$request,$tournament_id);
     }
 
     /**
      * @param int $tournament_id Tournament Id
      * @param int $group_id Group Id
+     * @param int $from
+     * @param int $to
      * @return array
      */
     public function getGroupOfTournament($tournament_id,$group_id){
-        return $this->get('tournaments/'.$tournament_id.'/groups/'.$group_id);
+        $request = $this->get('tournaments/'.$tournament_id.'/groups/'.$group_id);
+        return $this->dataToModel('Group',$request,$tournament_id);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
+     * @param int $from
+     * @param int $to
      * @return array
      */
-    public function getRoundsOfTournament($tournament_id,$filter){
+    public function getAllRoundsOfTournament($tournament_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
-        return $this->get('tournaments/'.$tournament_id.'/rounds'.$query);
+        $request = $this->get('tournaments/'.$tournament_id.'/rounds'.$query,'rounds',50);
+        return $this->dataToModels('Round',$request,$tournament_id);
+    }
+
+    /**
+     * @param int $tournament_id Tournament Id
+     * @param array|null $filter Filter as an array
+     * @param int $from
+     * @param int $to
+     * @return array
+     */
+    public function getRoundsOfTournament($tournament_id,$filter = null,$from = 0,$to = 49){
+        $query = $this->getQueryByFilter($filter);
+        $request = $this->get('tournaments/'.$tournament_id.'/rounds'.$query,'rounds',$from,$to);
+        return $this->dataToModels('Round',$request,$tournament_id);
     }
 
     /**
@@ -196,29 +243,32 @@ class ViewerApi extends ToornamentApi{
      * @return array
      */
     public function getRoundOfTournament($tournament_id,$round_id){
-        return $this->get('tournaments/'.$tournament_id.'/groups/'.$group_id);
+        $request = $this->get('tournaments/'.$tournament_id.'/groups/'.$group_id);
+        return $this->dataToModel('Round',$request,$tournament_id);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getAllMatchesOfTournament($tournament_id,$filter){
+    public function getAllMatchesOfTournament($tournament_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
-        return $this->getAll('tournaments/'.$tournament_id.'/matches'.$query,'matches',128);
+        $request = $this->getAll('tournaments/'.$tournament_id.'/matches'.$query,'matches',128);
+        return $this->dataToModels('Match',$request,$tournament_id);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param array|null $filter Filter as an array
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
      * @return array
      */
-    public function getMatchesOfTournament($tournament_id,$filter,$from,$to){
+    public function getMatchesOfTournament($tournament_id,$filter = null,$from = 0,$to = 127){
         $query = $this->getQueryByFilter($filter);
-        return $this->get('tournaments/'.$tournament_id.'/matches'.$query,'matches',$from,$to);
+        $request = $this->get('tournaments/'.$tournament_id.'/matches'.$query,'matches',$from,$to);
+        return $this->dataToModels('Match',$request,$tournament_id);
     }
 
     /**
@@ -227,38 +277,41 @@ class ViewerApi extends ToornamentApi{
      * @return array
      */
     public function getMatchOfTournament($tournament_id,$match_id){
-        return $this->get('tournaments/'.$tournament_id.'/matches'.$match_id);
+        $request = $this->get('tournaments/'.$tournament_id.'/matches'.$match_id);
+        return $this->dataToModel('Match',$request,$tournament_id);
     }
 
     /**
      * @param int $discipline_id Disciplione Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getAllMatchesByDiscipline($discipline_id,$filter){
+    public function getAllMatchesByDiscipline($discipline_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
-        return $this->getAll('disciplines/'.$discipline_id.'/matches'.$query,128);
+        $request = $this->getAll('disciplines/'.$discipline_id.'/matches'.$query,'matches',128);
+        return $this->dataToModels('Match',$request,$tournament_id);
     }
 
     /**
      * @param int $discipline_id Discipline Id
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param array|null $filter Filter as an array
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
      * @return array
      */    
-    public function getMatchesByDiscipline($discipline_id,$filter,$from,$to){
+    public function getMatchesByDiscipline($discipline_id,$filter = null,$from = 0,$to = 128){
         $query = $this->getQueryByFilter($filter);
-        return $this->get('disciplines/'.$discipline_id.'/matches'.$query,'matches',$from,$to);
+        $request = $this->get('disciplines/'.$discipline_id.'/matches'.$query,'matches',$from,$to);
+        return $this->dataToModels('Match',$request,$tournament_id);
     }
 
     /**
      * @param int $tournament_id Tournament Id
      * @param int $stage_id Stage Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getAllBracketsOfStageInTournament($tournament_id,$stage_id,$filter){
+    public function getAllBracketsOfStageInTournament($tournament_id,$stage_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
         return $this->getAll('tournaments/'.$tournament_id.'/stages/'.$stage_id.'/bracket-nodes'.$query,'nodes',128);
     }
@@ -266,12 +319,12 @@ class ViewerApi extends ToornamentApi{
     /**
      * @param int $tournament_id Tournament Id
      * @param int $stage_id Stage Id
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param array|null $filter Filter as an array
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
      * @return array
      */
-    public function getBracketsOfStageInTournament($tournament_id,$stage_id,$filter,$from,$to){
+    public function getBracketsOfStageInTournament($tournament_id,$stage_id,$filter = null,$from = 0,$to = 128){
         $query = $this->getQueryByFilter($filter);
         return $this->get('tournaments/'.$tournament_id.'/stages/'.$stage_id.'/bracket-nodes'.$query,'nodes',$from,$to);
     }
@@ -279,10 +332,10 @@ class ViewerApi extends ToornamentApi{
     /**
      * @param int $tournament_id Tournament Id
      * @param int $stage_id Stage Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getAllRankingsOfStageInTournament($tournament_id,$stage_id,$filter){
+    public function getAllRankingsOfStageInTournament($tournament_id,$stage_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
         return $this->getAll('tournaments/'.$tournament_id.'/stages/'.$stage_id.'/ranking-items'.$query,'items',128);
     }
@@ -290,56 +343,56 @@ class ViewerApi extends ToornamentApi{
     /**
      * @param int $tournament_id Tournament Id
      * @param int $stage_id Stage Id
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param array|null $filter Filter as an array
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
      * @return array
      */
-    public function getRankingsOfStageInTournament($tournament_id,$stage_id,$filter,$from,$to){
+    public function getRankingsOfStageInTournament($tournament_id,$stage_id,$filter = null,$from = 0,$to = 49){
         $query = $this->getQueryByFilter($filter);
         return $this->get('tournaments/'.$tournament_id.'/stages/'.$stage_id.'/ranking-items'.$query,'items',$from,$to);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getAllStreamsOfTournament($tournament_id,$filter){
+    public function getAllStreamsOfTournament($tournament_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
         return $this->getAll('tournaments/'.$tournament_id.'/streams'.$query,'streams',50);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param array|null $filter Filter as an array
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
      * @return array
      */
-    public function getStreamsOfTournament($tournament_id,$filter,$from,$to){
+    public function getStreamsOfTournament($tournament_id,$filter = null,$from = 0,$to = 49){
         $query = $this->getQueryByFilter($filter);
         return $this->get('tournaments/'.$tournament_id.'/streams'.$query,'streams',$from,$to);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getAllVideosOfTournament($tournament_id,$filter){
+    public function getAllVideosOfTournament($tournament_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
         return $this->getAll('tournaments/'.$tournament_id.'/videos'.$query,'videos',50);
     }
 
     /**
      * @param int $tournament_id Tournament Id
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
+     * @param array|null $filter Filter as an array
+     * @param int|null $from Start for pagination
+     * @param int|null $to End for pagination
      * @return array
      */
-    public function getVideosOfTournament($tournament_id,$filter,$from,$to){
+    public function getVideosOfTournament($tournament_id,$filter = null,$from = 0,$to = 49){
         $query = $this->getQueryByFilter($filter);
         return $this->get('tournaments/'.$tournament_id.'/videos'.$query,'videos',$from,$to);
     }
@@ -347,24 +400,11 @@ class ViewerApi extends ToornamentApi{
     /**
      * @param int $tournament_id Tournament Id
      * @param int $match_id Match Id
-     * @param array $filter Filter as an array
+     * @param array|null $filter Filter as an array
      * @return array
      */
-    public function getAllVideosOfMatchInTournament($tournament_id,$match_id,$filter){
+    public function getVideosOfMatchInTournament($tournament_id,$match_id,$filter = null){
         $query = $this->getQueryByFilter($filter);
-        return $this->getAll('tournaments/'.$tournament_id.'/matches/'.$match_id.'/videos'.$query,'videos',50);
-    }
-
-    /**
-     * @param int $tournament_id Tournament Id
-     * @param int $match_id Match Id
-     * @param array $filter Filter as an array
-     * @param int $from Start for pagination
-     * @param int $to End for pagination
-     * @return array
-     */
-    public function getVideosOfMatchInTournament($tournament_id,$match_id,$filter,$from,$to){
-        $query = $this->getQueryByFilter($filter);
-        return $this->get('tournaments/'.$tournament_id.'/matches/'.$match_id.'/videos'.$query,'videos',$from,$to);
+        return $this->getAll('tournaments/'.$tournament_id.'/matches/'.$match_id.'/videos'.$query);
     }
 }

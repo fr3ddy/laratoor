@@ -27,13 +27,56 @@ Since version two, Toornament does have four different layers in their API.
 ### Viewer API
 The Viewer API helps in accessing data like disciplines, featured tournaments, match information and many more.
 
+#### Filter
+Some of the methods allow to specify a filter. This can be done by specifying an array with the respective content to filter on.
+
+For example:
 ```php
     use Fr3ddy\Laratoor\ViewerApi;
 
     $viewer = new ViewerApi();
-    $disciplines = $viewer->getAllDisciplines();
-    $disciplines = $viewer->getDisciplines($from = 0,$to = 49);
+    
     $discipline = $viewer->getDiscipline($id);
+    $filter = array(
+        'is_featured' => 1, //returns matches of featured tournaments
+        'statuses' => [ //pass an array of status you want to have in your list
+            'pending',
+            'running'
+        ]
+    );
+    $matches = $discipline->getAllMatches($filter);
+```
+You can find the possibilities to filter on the Toornament API page with the respective API call as Query Parameters.
+
+#### Discipline
+
+```php
+    use Fr3ddy\Laratoor\ViewerApi;
+
+    $viewer = new ViewerApi();
+    
+    //Collection of all disciplines
+    $disciplines = $viewer->getAllDisciplines();
+    //Collection of disciplines with pagination
+    $disciplines = $viewer->getDisciplines($from,$to);
+    //Discipline without platforms_available & team_size
+    $first_discipline = $disciplines->first();
+    //Discipline with platforms_available & team_size
+    $first_discipline->loadDetails();
+    //Discipline with platforms_available & team_size
+    $discipline = $viewer->getDiscipline($id);
+    //All Matches of this discipline
+    $matches = $discipline->getAllMatches($filter);
+    //Matches of this discipline with Pagination
+    $matches = $discipline->getMatches($filter,$from,$to);
+
+```
+
+#### Tournaments
+
+
+
+```php
     $tournaments = $viewer->getAllFeaturedTournaments($filter = null);
     $tournaments = $viewer->getFeaturedTournaments($filter,$from,$to);
     $tournament = $viewer->getTournament($tournament_id);
@@ -50,8 +93,6 @@ The Viewer API helps in accessing data like disciplines, featured tournaments, m
     $matches = $viewer->getAllMatchesOfTournament($tournament_id,$filter);
     $matches = $viewer->getMatchesOfTournament($tournament_id,$filter,$from,$to);
     $matche = $viewer->getMatchOfTournament($tournament_id,$match_id);
-    $matches = $viewer->getAllMatchesByDiscipline($discipline_id,$filter);
-    $matches = $viewer->getMatchesByDiscipline($discipline_id,$filter,$from,$to);
     $brackets = $viewer->getAllBracketsOfStageInTournament($tournament_id,$stage_id,$filter);
     $brackets = $viewer->getBracketsOfStageInTournament($tournament_id,$stage_id,$filter,$from,$to);
     $rankings = $viewer->getAllRankingsOfStageInTournament($tournament_id,$stage_id,$filter);
@@ -73,22 +114,6 @@ TBD
 
 ### Organizer API
 Comming soon
-
-### Responses
-As a response, an array will be returned.
-
-```php
-    use Fr3ddy\Laratoor\ViewerApi;
-
-    $viewer = new ViewerApi();
-    $tournaments = $viewer->getFeaturedTournaments();
-    
-    echo $tournaments['status']; //200 Status Code
-    echo $tournaments['from']; //0 Start of Pagination
-    echo $tournaments['to']; //50 End of Pagination
-    echo $tournaments['total']; //300 Total amount of available Items
-    var_dump($tournaments['data']); //Collection of tournaments
-```
 
 #### Disclaimer
 This packages is not related in any way to [Oxent](https://oxent.net) or any other company related to Toornament.

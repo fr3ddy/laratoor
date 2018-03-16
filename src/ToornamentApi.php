@@ -85,7 +85,7 @@ class ToornamentApi{
      * @param int $status
      * @return boolean
      */
-    protected function isSuccessStatus($status){
+    public function isSuccessStatus($status){
         switch ($status) {
             case self::STATUS_OK:
             case self::STATUS_CREATED:
@@ -132,12 +132,17 @@ class ToornamentApi{
     /**
      * @param string $classname Name of the Class to create
      * @param array $data Data Array
+     * @param int|null $parent
      * @return any Class of Type specified
      */
-    public function dataToModel($classname,$data){
+    public function dataToModel($classname,$data,$parent = null){
         $classname = "\Fr3ddy\Laratoor\Model\\".$classname;
         if($this->isSuccessStatus($data["status"])){
-            return new $classname($data["data"]);
+            if($parent != null){
+                return new $classname($parent, $data["data"]);
+            }else{
+                return new $classname($data["data"]);
+            }
         }
         return false;
     }
@@ -145,14 +150,19 @@ class ToornamentApi{
     /**
      * @param string $classname Name of the Class to create
      * @param array $data Data Array
+     * @param int|null $parent
      * @return array Collection of Classes of Type specified
      */
-    public function dataToModels($classname,$data){
+    public function dataToModels($classname,$data,$parent = null){
         $classname = "\Fr3ddy\Laratoor\Model\\".$classname;
         if($this->isSuccessStatus($data["status"])){
             $return = collect();
             foreach($data["data"] as $classdata){
-                $return->push(new $classname($classdata));
+                if($parent != null){
+                    $return->push(new $classname($parent, $classdata));
+                }else{
+                    $return->push(new $classname($classdata));
+                }
             }
             return $return;
         }
