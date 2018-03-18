@@ -68,6 +68,13 @@ class Match extends \Fr3ddy\Laratoor\Model{
      * @var array
      */
     public $opponents;
+
+    /**
+     * $games
+     *
+     * @var array|null
+     */
+    public $games = null;
     
     /**
     * __construct
@@ -130,5 +137,29 @@ class Match extends \Fr3ddy\Laratoor\Model{
     */
     public function getVideos($filter = null){
         return $this->viewerApi->getVideosOfMatchInTournament($this->tournament_id,$this->id,$filter);
+    }
+
+    /**
+     * getGames
+     *
+     * @return Collection
+     */
+    public function getGames(){
+        return $this->games;
+    }
+
+    /**
+     * getGame
+     *
+     * @param int $number
+     * @return array
+     */
+    public function getGame($number){
+        foreach($this->games as $game){
+            if($game->number == $number){
+                return $game;
+            }
+        }
+        return null;
     }
 }
