@@ -22,7 +22,17 @@ Add your API Token to your application from [Toornament](https://developer.toorn
 ```
 
 ## Usage
-Since version two, Toornament does have four different layers in their API.
+Since version two, Toornament does have four different layers in their API. The Viewer API gives you publicly available informations. The Account API will give you access to the user data. The Participant API allows you to register to a tournament and the organizer API helps you managing tournaments.
+
+**Status of implementation**
+Viewer API: *Beta* Working version which may need some more optimization
+
+Account API: *TBD* Not already implemented.
+
+Participant API: *TBD* Not already implemented.
+
+Organizer API: *TBD* Not already implemented by Toornament itself.
+
 
 ### Viewer API
 The Viewer API helps in accessing data like disciplines, featured tournaments, match information and many more.
@@ -88,6 +98,8 @@ In Toornament, competitors are defined as participants. The predefined path of m
     $tournaments = $viewer->getFeaturedTournaments($filter,$from,$to);
     //Tournament by Tournamnet ID
     $tournament = $viewer->getTournament($tournament_id);
+
+
     //Custom Fields of Teams for this tournament
     $custom_fields_team = $tournament->getCustomFieldsTeam();
     //Custom Fields of Team Players for this tournament

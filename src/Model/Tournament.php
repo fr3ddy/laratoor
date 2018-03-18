@@ -312,62 +312,161 @@ class Tournament extends \Fr3ddy\Laratoor\Model{
         return $this->viewerApi->getParticipantOfTournament($this->id,$participant_id);
     }
 
+    /**
+     * getStages
+     *
+     * @return void
+     */
     public function getStages(){
         return $this->viewerApi->getStagesOfTournament($this->id);
     }
 
+    /**
+     * getStage
+     *
+     * @param mixed $stage_id
+     * @return void
+     */
     public function getStage($stage_id){
         return $this->viewerApi->getStageOfTournament($this->id,$stage_id);
     }
 
+    /**
+     * getAllGroups
+     *
+     * @param mixed $filter
+     * @return void
+     */
     public function getAllGroups($filter = null){
         return $this->viewerApi->getAllGroupsOfTournament($this->id,$filter);
     }
 
+    /**
+     * getGroups
+     *
+     * @param mixed $filter
+     * @param mixed $from
+     * @param mixed $to
+     * @return void
+     */
     public function getGroups($filter = null,$from = 0,$to = 49){
         return $this->viewerApi->getGroupsOfTournament($this->id,$filter,$from,$to);
     }
 
+    /**
+     * getGroup
+     *
+     * @param mixed $group_id
+     * @return void
+     */
     public function getGroup($group_id){
         return $this->viewerApi->getGroupOfTournament($this->id,$group_id);
     }
 
+    /**
+     * getAllRounds
+     *
+     * @param mixed $filter
+     * @return void
+     */
     public function getAllRounds($filter = null){
         return $this->viewerApi->getAllRoundsOfTournament($this->id,$filter);
     }
 
+    /**
+     * getRounds
+     *
+     * @param mixed $filter
+     * @param mixed $from
+     * @param mixed $to
+     * @return void
+     */
     public function getRounds($filter = null,$from = 0,$to = 49){
         return $this->viewerApi->getRoundsOfTournament($this->id,$filter,$from,$to);
     }
 
+    /**
+     * getRound
+     *
+     * @param mixed $round_id
+     * @return void
+     */
     public function getRound($round_id){
         return $this->viewerApi->getRoundOfTournament($this->id,$round_id);
     }
 
+    /**
+     * getAllMatches
+     *
+     * @param mixed $filter
+     * @return void
+     */
     public function getAllMatches($filter = null){
         return $this->viewerApi->getAllMatchesOfTournament($this->id,$filter);
     }
 
+    /**
+     * getMatches
+     *
+     * @param mixed $filter
+     * @param mixed $from
+     * @param mixed $to
+     * @return void
+     */
     public function getMatches($filter = null,$from = 0,$to = 127){
         return $this->viewerApi->getMatchesOfTournament($this->id,$filter,$from,$to);
     }
 
+    /**
+     * getMatch
+     *
+     * @param mixed $match_id
+     * @return void
+     */
     public function getMatch($match_id){
         return $this->viewerApi->getMatchOfTournament($this->id,$match_id);
     }
 
+    /**
+     * getAllStreams
+     *
+     * @param mixed $filter
+     * @return void
+     */
     public function getAllStreams($filter = null){
         return $this->viewerApi->getAllStreamsOfTournament($this->id,$filter);
     }
 
+    /**
+     * getStreams
+     *
+     * @param mixed $filter
+     * @param mixed $form
+     * @param mixed $to
+     * @return void
+     */
     public function getStreams($filter = null,$form = 0, $to = 49){
         return $this->viewerApi->getStreamsOfTournament($this->id,$filter,$from,$to);
     }
 
+    /**
+     * getAllVideos
+     *
+     * @param mixed $filter
+     * @return void
+     */
     public function getAllVideos($filter = null){
         return $this->viewerApi->getAllVideosOfTournament($this->id,$filter);
     }
 
+    /**
+     * getVideos
+     *
+     * @param mixed $filter
+     * @param mixed $form
+     * @param mixed $to
+     * @return void
+     */
     public function getVideos($filter = null,$form = 0, $to = 49){
         return $this->viewerApi->getVideosOfTournament($this->id,$filter,$from,$to);
     }
