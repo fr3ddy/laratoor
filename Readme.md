@@ -18,7 +18,9 @@ Add Fr3ddy\Laratoor\LaratoorServiceProvider::class to your providers array in yo
 Add your API Token to your application from [Toornament](https://developer.toornament.com/applications/).
 
 ```php
-    TOORNAMENT_SECRET=
+    TOORNAMENT_KEY=
+    TOORNAMENT_CLIENT_ID=
+    TOORNAMENT_CLIENT_SECRET=
 ```
 
 ## Usage
@@ -27,7 +29,7 @@ Since version two, Toornament does have four different layers in their API. The 
 **Status of implementation**
 Viewer API: *Beta* Working version which may need some more optimization
 
-Account API: *TBD* Not already implemented.
+Account API: *Alpha* User Authorization implemented and returning user is working fine.
 
 Participant API: *TBD* Not already implemented.
 
@@ -383,7 +385,25 @@ Toornament also provides details about the attached Streams and Videos which are
 ```
 
 ### Account API
-TBD
+With the Account API you can access user data of the logged in user. Your visitor has to login through Toornaments oAuth2 endpoint. For this you need TOORNAMENT_CLIENT_ID and TOORNAMENT_CLIENT_SECRET in your .env file.
+Additionally you need to setup your redirect url in toornament too. For this you have to visit [Toornament Developer Page](https://developer.toornament.com/applications/) and set the redirect url of the respective application you are working on to **https://yourdomain.com/toornament/redirect**. Don't mind this redirect url, you can set your own one in the application itself, this one is just needed to make the process as simple as possible for you.
+
+```php
+    use Fr3ddy\Laratoor\AccountApi;
+
+    Route::get('/', function () {
+        $accountApi = new AccountApi();
+        echo '<a href="'.$accountApi->getAuthUrl(url('/authorized')).'">Click me</a>';
+    });
+
+    Route::get('/authorized',function(){
+        $accountApi = new AccountApi();
+        $user = $accountApi->getUser();
+        echo 'Hello '.$user->name.' from '.$user->country.'.';
+    });
+```
+
+As easy as this two steps, you have your user logged in and you can access his personal data.
 
 ### Participant API
 TBD

@@ -13,7 +13,7 @@ class LaratoorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
     }
 
     /**
@@ -28,6 +28,9 @@ class LaratoorServiceProvider extends ServiceProvider
         });
         $this->app->singleton('Fr3ddy\Laratoor\ViewerApi',function($app){
             return new Fr3ddy\Laratoor\ViewerApi();
+        });
+        $this->app->singleton('Fr3ddy\Laratoor\AccountApi',function($app){
+            return new Fr3ddy\Laratoor\AccountApi();
         });
     }
 }

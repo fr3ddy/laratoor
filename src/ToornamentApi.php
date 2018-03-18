@@ -11,16 +11,88 @@ class ToornamentApi{
     const STATUS_NOCONTENT = 204;
     const STATUS_PARTIALCONTENT = 206;
 
+    protected $authUrl = "https://api.toornament.com/oauth/v2/token";
+
+    protected $userAuthUrl = "https://account.toornament.com/oauth2/authorize";
+
     protected $client;
 
     public function __construct(){
         $this->client = new Client([
             'headers' => [
-                'X-Api-Key' => env('TOORNAMENT_SECRET')
+                'X-Api-Key' => env('TOORNAMENT_KEY')
             ],
             'verify' => false,
             'http_errors' => false,
         ]);
+    }
+
+    protected function getAuthUrlWithScope($scope,$redirect_url){
+        session([
+            'toornament_state' => str_random(30),
+            'toornament_redirect_url' => $redirect_url,
+        ]);
+        return $this->userAuthUrl.'?response_type=code&client_id='.env('TOORNAMENT_CLIENT_ID')
+                    .'&redirect_uri='.urlencode(url('/toornament/redirect'))
+                    .'&scope='.urlencode($scope)
+                    .'&state='.session('toornament_state');
+    }
+
+    public function authorize(){
+        $response = $this->client->request('POST',$this->authUrl,[
+            'body' => 'grant_type=authorization_code&client_id='.
+                        env('TOORNAMENT_CLIENT_ID').'&client_secret='.
+                        env('TOORNAMENT_CLIENT_SECRET').'&redirect_uri='.
+                        urlencode(url('/toornament/redirect')).'&code='.session('toornament_code'),
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+        ]);
+        if($response->getStatusCode() == 200){
+            $body = json_decode($response->getBody());
+            session([
+                'toornament_access_token' => $body->access_token,
+                'toornament_refresh_token' => $body->refresh_token,
+                'toornament_access_token_end' => \Carbon\Carbon::now()->addSeconds($body->expires_in)
+            ]);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function reauthorize(){
+        if(session()->has('toornament_refresh_token')){
+            $response = $this->client->request('POST',$this->authUrl,[
+                'body' => 'grant_type=refresh_token&client_id='.
+                            env('TOORNAMENT_CLIENT_ID').'&client_secret='.
+                            env('TOORNAMENT_CLIENT_SECRET').'&refresh_token='.session('toornament_refresh_token'),
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+            ]);
+            if($response->getStatusCode() == 200){
+                $body = json_decode($response->getBody());
+                session([
+                    'toornament_access_token' => $body->access_token,
+                    'toornament_refresh_token' => $body->refresh_token,
+                    'toornament_access_token_end' => \Carbon\Carbon::now()->addSeconds($body->expires_in)
+                ]);
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    public function authorizationValid(){
+        if(\Carbon\Carbon::now()->diffInSeconds(session('toornament_access_token_end',\Carbon\Carbon::now())) > 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     protected function get($url,$headers){

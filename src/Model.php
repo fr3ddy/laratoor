@@ -16,8 +16,16 @@ class Model{
      */
     protected $viewerApi;
 
+    /**
+     * $accountApi
+     *
+     * @var \Fr3ddy\Laratoor\AccountApi $accountApi Account Api singleton
+     */
+    protected $accountApi;
+
     public function __construct(){
         $this->viewerApi = new ViewerApi();
+        $this->accountApi = new AccountApi();
     }
 
 }
