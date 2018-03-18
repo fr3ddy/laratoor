@@ -27,6 +27,7 @@ Add your API Token to your application from [Toornament](https://developer.toorn
 Since version two, Toornament does have four different layers in their API. The Viewer API gives you publicly available informations. The Account API will give you access to the user data. The Participant API allows you to register to a tournament and the organizer API helps you managing tournaments.
 
 **Status of implementation**
+
 Viewer API: *Beta* Working version which may need some more optimization
 
 Account API: *Alpha* User Authorization implemented and returning user is working fine.
