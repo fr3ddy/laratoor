@@ -32,5 +32,8 @@ class LaratoorServiceProvider extends ServiceProvider
         $this->app->singleton('Fr3ddy\Laratoor\AccountApi',function($app){
             return new Fr3ddy\Laratoor\AccountApi();
         });
+        $this->app->singleton('Fr3ddy\Laratoor\ParticipantApi',function($app){
+            return new Fr3ddy\Laratoor\ParticipantApi();
+        });
     }
 }

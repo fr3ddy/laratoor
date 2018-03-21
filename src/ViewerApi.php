@@ -25,30 +25,6 @@ class ViewerApi extends ToornamentApi{
         return $return;
     }
 
-    protected function getAll($url,$unit,$size){
-        $return = array();
-        $return["data"] = collect();
-        $return["from"] = 0;
-        $from = 0;
-        $to = $size - 1;
-        do{
-            $response = $this->get($url,$unit,$from,$to);
-            if(!$this->isSuccessStatus($response['status'])){
-                return $response;
-            }
-            
-            $return['status'] = $response['status'];
-            $return["to"] = $response["to"];
-            $return["total"] = $response["total"];
-            $return["data"] = $return["data"]->concat($response["data"]);
-            
-            $from = $to + 1;
-            $to = $to + $size;
-        }while($response["to"] < $response["total"] - 1);
-
-        return $return;
-    }
-
     /**
      * @throws 
      * @return array $disciplines Array with Disciplines

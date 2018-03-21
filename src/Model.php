@@ -17,15 +17,19 @@ class Model{
     protected $viewerApi;
 
     /**
-     * $accountApi
-     *
-     * @var \Fr3ddy\Laratoor\AccountApi $accountApi Account Api singleton
+     * @var \Fr3ddy\Laratoor\AccountApi $viewerApi Account Api singleton
      */
     protected $accountApi;
+
+    /**
+     * @var \Fr3ddy\Laratoor\ParticipantApi $participantApi Participant Api singleton
+     */
+    protected $participantApi;
 
     public function __construct(){
         $this->viewerApi = new ViewerApi();
         $this->accountApi = new AccountApi();
+        $this->participantApi = new ParticipantApi();
     }
 
 }

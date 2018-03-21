@@ -3,6 +3,7 @@
 namespace Fr3ddy\Laratoor\Model;
 
 use Fr3ddy\Laratoor\ViewerApi;
+use Fr3ddy\Laratoor\ParticipantApi;
 
 class Tournament extends \Fr3ddy\Laratoor\Model{
 
@@ -202,6 +203,59 @@ class Tournament extends \Fr3ddy\Laratoor\Model{
      */
     public $registration_closing_datetime;
 
+
+    /**
+     * $registration_request_message
+     *
+     * @var string
+     */
+    public $registration_request_message;
+
+    /**
+     * $registration_terms_enabled
+     *
+     * @var bool
+     */
+    public $registration_terms_enabled;
+
+    /**
+     * $registration_terms_url
+     *
+     * @var string
+     */
+    public $registration_terms_url;
+
+    /**
+     * $check_in_enabled
+     *
+     * @var bool
+     */
+    public $check_in_enabled;
+
+    /**
+     * $check_in_participant_enabled
+     *
+     * @var bool
+     */
+    public $check_in_participant_enabled;
+
+    /**
+     * $check_in_participant_start_datetime
+     *
+     * @var \Carbon\Carbon
+     */
+    public $check_in_participant_start_datetime;
+
+    /**
+     * $check_in_participant_end_datetime
+     *
+     * @var \Carbon\Carbon
+     */
+    public $check_in_participant_end_datetime;
+
+    
+
+
     /**
      * __construct
      *
@@ -224,6 +278,8 @@ class Tournament extends \Fr3ddy\Laratoor\Model{
                     case 'scheduled_date_end':
                     case 'registration_opening_datetime':
                     case 'registration_closing_datetime':
+                    case 'check_in_participant_start_datetime':
+                    case 'check_in_participant_end_datetime':
                         $this->$key = \Carbon\Carbon::parse($value);
                         break;
     
@@ -242,12 +298,7 @@ class Tournament extends \Fr3ddy\Laratoor\Model{
      */
     public function getCustomFieldsTeam(){
         $filter = [ "target_type" => "team" ];
-        $request = $this->viewerApi->getTournamentCustomFields($this->id,$filter);
-        if($this->viewerApi->isSuccessStatus($request["status"]) && isset($request["data"][0])){
-            return $request["data"][0];
-        }else{
-            return null;
-        }
+        return $this->getCustomFields($filter);
     }
 
     /**
@@ -257,12 +308,7 @@ class Tournament extends \Fr3ddy\Laratoor\Model{
      */
     public function getCustomFieldsTeamPlayer(){
         $filter = [ "target_type" => "team_player" ];
-        $request = $this->viewerApi->getTournamentCustomFields($this->id,$filter);
-        if($this->viewerApi->isSuccessStatus($request["status"]) && isset($request["data"][0])){
-            return $request["data"][0];
-        }else{
-            return null;
-        }
+        return $this->getCustomFields($filter);
     }
 
     /**
@@ -272,9 +318,17 @@ class Tournament extends \Fr3ddy\Laratoor\Model{
      */
     public function getCustomFieldsPlayer(){
         $filter = [ "target_type" => "player" ];
-        $request = $this->viewerApi->getTournamentCustomFields($this->id,$filter);
+        return $this->getCustomFields($filter);
+    }
+
+    public function getCustomFields($filter = null){
+        if($this->participantApi->authorizationValid($this->participantApi->scope)){
+            $request = $this->participantApi->getTournamentCustomFields($this->id,$filter);
+        }else{
+            $request = $this->viewerApi->getTournamentCustomFields($this->id,$filter);
+        }
         if($this->viewerApi->isSuccessStatus($request["status"]) && isset($request["data"][0])){
-            return $request["data"][0];
+            return $request["data"];
         }else{
             return null;
         }

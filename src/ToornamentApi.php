@@ -28,9 +28,12 @@ class ToornamentApi{
     }
 
     protected function getAuthUrlWithScope($scope,$redirect_url){
+        $scopes = session('toornament_permission_scopes',collect());
+        if(!$scopes->contains($scope)) $scopes->push($scope);
         session([
             'toornament_state' => str_random(30),
             'toornament_redirect_url' => $redirect_url,
+            'toornament_permission_scopes' => $scopes,
         ]);
         return $this->userAuthUrl.'?response_type=code&client_id='.env('TOORNAMENT_CLIENT_ID')
                     .'&redirect_uri='.urlencode(url('/toornament/redirect'))
@@ -57,6 +60,7 @@ class ToornamentApi{
             ]);
             return true;
         }else{
+            session()->forget('toornament_permission_scopes');
             return false;
         }
     }
@@ -87,18 +91,43 @@ class ToornamentApi{
         }
     }
 
-    public function authorizationValid(){
+    public function authorizationValid($scope = null){
         if(\Carbon\Carbon::now()->diffInSeconds(session('toornament_access_token_end',\Carbon\Carbon::now())) > 0){
-            return true;
-        }else{
-            return false;
+            if($scope && session('toornament_permission_scopes',collect())->contains($scope)){
+                return true;
+            }
         }
+        return false;
     }
 
     protected function get($url,$headers){
         return $this->client->request('GET',$url,[
             'headers' => $headers
         ]);
+    }
+
+    protected function getAll($url,$unit,$size){
+        $return = array();
+        $return["data"] = collect();
+        $return["from"] = 0;
+        $from = 0;
+        $to = $size - 1;
+        do{
+            $response = $this->get($url,$unit,$from,$to);
+            if(!$this->isSuccessStatus($response['status'])){
+                return $response;
+            }
+            
+            $return['status'] = $response['status'];
+            $return["to"] = $response["to"];
+            $return["total"] = $response["total"];
+            $return["data"] = $return["data"]->concat($response["data"]);
+            
+            $from = $to + 1;
+            $to = $to + $size;
+        }while($response["to"] < $response["total"] - 1);
+
+        return $return;
     }
 
     /**
